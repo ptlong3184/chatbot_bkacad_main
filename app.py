@@ -4,13 +4,20 @@ from fastapi.middleware.cors import CORSMiddleware
 import mysql.connector
 from mysql.connector import Error
 from google.cloud import dialogflow_v2 as dialogflow
+from google.oauth2 import service_account
 import os
+import json
 
-# Thiết lập biến môi trường cho Dialogflow
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.path.join(BASE_DIR, "service-account.json")
+# Lấy credentials từ biến môi trường JSON
+credentials_info = json.loads(os.environ["GOOGLE_APPLICATION_CREDENTIALS_JSON"])
+credentials = service_account.Credentials.from_service_account_info(credentials_info)
 
+# Tạo Dialogflow session client
+session_client = dialogflow.SessionsClient(credentials=credentials)
+
+# ID của project trên Dialogflow
 PROJECT_ID = "chatbottuyensinh-gphg"
+
 
 app = FastAPI()
 
@@ -26,11 +33,11 @@ app.add_middleware(
 # Kết nối MySQL
 def get_connection():
     return mysql.connector.connect(
-        host='yamabiko.proxy.rlwy.net',
-        port=53957,
-        user='root',
-        password='aMBMqlkYQCgIusgpmrnihDtUYjNDVkGt',
-        database='railway'
+        host=os.getenv("DB_HOST"),
+        port=int(os.getenv("DB_PORT")),
+        user=os.getenv("DB_USER"),
+        password=os.getenv("DB_PASSWORD"),
+        database=os.getenv("DB_NAME")
     )
 
 # Model cho request
