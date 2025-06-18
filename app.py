@@ -76,7 +76,7 @@ async def dialogflow_proxy(req: DialogflowRequest):
         intent_name = result.intent.display_name if result.intent else ""
 
         # Nếu là intent kết thúc thì đánh dấu kết thúc phiên
-        if intent_name.lower() == "ketthuc":
+        if intent_name == "IKetThuc":
             mark_session_ended(session_id)
 
         # Lưu vào database
