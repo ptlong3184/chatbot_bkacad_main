@@ -12,12 +12,11 @@ import json
 credentials_info = json.loads(os.environ["GOOGLE_APPLICATION_CREDENTIALS_JSON"])
 credentials = service_account.Credentials.from_service_account_info(credentials_info)
 
-# Tạo Dialogflow session client
+# Tạo Dialogflow session client từ credentials
 session_client = dialogflow.SessionsClient(credentials=credentials)
 
 # ID của project trên Dialogflow
 PROJECT_ID = "chatbottuyensinh-gphg"
-
 
 app = FastAPI()
 
@@ -63,7 +62,6 @@ async def dialogflow_proxy(req: DialogflowRequest):
         raise HTTPException(status_code=400, detail="Missing query")
 
     try:
-        session_client = dialogflow.SessionsClient()
         session = session_client.session_path(PROJECT_ID, session_id)
 
         text_input = dialogflow.TextInput(text=user_query, language_code="vi")
