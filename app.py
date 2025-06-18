@@ -12,7 +12,7 @@ import json
 credentials_info = json.loads(os.environ["GOOGLE_APPLICATION_CREDENTIALS_JSON"])
 credentials = service_account.Credentials.from_service_account_info(credentials_info)
 
-# Tạo Dialogflow session client từ credentials
+# Tạo Dialogflow session client
 session_client = dialogflow.SessionsClient(credentials=credentials)
 
 # ID của project trên Dialogflow
@@ -92,6 +92,7 @@ async def dialogflow_proxy(req: DialogflowRequest):
 
 # Lưu lượt chat
 def save_turn(session_id, turn_order, user_query, intent_name, parameters, bot_response):
+    conn = None
     try:
         conn = get_connection()
         cursor = conn.cursor()
@@ -109,12 +110,13 @@ def save_turn(session_id, turn_order, user_query, intent_name, parameters, bot_r
     except Error as e:
         print(f"Lỗi khi lưu lượt chat: {e}")
     finally:
-        if conn.is_connected():
+        if conn and conn.is_connected():
             cursor.close()
             conn.close()
 
 # Lấy lượt chat tiếp theo
 def get_next_turn_order(session_id):
+    conn = None
     try:
         conn = get_connection()
         cursor = conn.cursor()
@@ -125,6 +127,6 @@ def get_next_turn_order(session_id):
         print(f"Lỗi khi lấy số lượt chat: {e}")
         return 1
     finally:
-        if conn.is_connected():
+        if conn and conn.is_connected():
             cursor.close()
             conn.close()
