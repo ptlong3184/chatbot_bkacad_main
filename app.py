@@ -73,6 +73,11 @@ async def dialogflow_proxy(req: DialogflowRequest):
 
         result = response.query_result
         fulfillment_text = result.fulfillment_text or "Xin lỗi, tôi chưa có thông tin phù hợp."
+        intent_name = result.intent.display_name if result.intent else ""
+
+        # Nếu là intent kết thúc thì đánh dấu kết thúc phiên
+        if intent_name.lower() == "ketthuc":
+            mark_session_ended(session_id)
 
         # Lưu vào database
         turn_order = get_next_turn_order(session_id)
@@ -80,7 +85,7 @@ async def dialogflow_proxy(req: DialogflowRequest):
             session_id,
             turn_order,
             user_query,
-            result.intent.display_name if result.intent else "",
+            intent_name,
             result.parameters,
             fulfillment_text
         )
@@ -126,6 +131,21 @@ def get_next_turn_order(session_id):
     except Error as e:
         print(f"Lỗi khi lấy số lượt chat: {e}")
         return 1
+    finally:
+        if conn and conn.is_connected():
+            cursor.close()
+            conn.close()
+
+# Đánh dấu phiên đã kết thúc
+def mark_session_ended(session_id):
+    conn = None
+    try:
+        conn = get_connection()
+        cursor = conn.cursor()
+        cursor.execute("UPDATE chatbot_sessions SET is_ended = TRUE WHERE session_id = %s", (session_id,))
+        conn.commit()
+    except Error as e:
+        print(f"Lỗi khi đánh dấu kết thúc phiên: {e}")
     finally:
         if conn and conn.is_connected():
             cursor.close()
