@@ -32,11 +32,11 @@ app.add_middleware(
 # Kết nối MySQL
 def get_connection():
     return mysql.connector.connect(
-        host=os.getenv("DB_HOST"),
-        port=int(os.getenv("DB_PORT")),
-        user=os.getenv("DB_USER"),
-        password=os.getenv("DB_PASSWORD"),
-        database=os.getenv("DB_NAME")
+        host=os.getenv("DB_HOST").strip(),
+        port=int(os.getenv("DB_PORT").strip()),
+        user=os.getenv("DB_USER").strip(),
+        password=os.getenv("DB_PASSWORD").strip(),
+        database=os.getenv("DB_NAME").strip()
     )
 
 # Model cho request
