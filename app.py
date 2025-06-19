@@ -52,6 +52,29 @@ class EndSessionRequest(BaseModel):
 def root():
     return {"message": "Chatbot API is running"}
 
+# Truy vấn dynamic_answers nếu có
+def get_dynamic_answer(intent_name: str, program_id: int = None):
+    conn = None
+    try:
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
+
+        if program_id:
+            cursor.execute("SELECT answer_text FROM dynamic_answers WHERE intent_name = %s AND program_id = %s", (intent_name, program_id))
+        else:
+            cursor.execute("SELECT answer_text FROM dynamic_answers WHERE intent_name = %s AND program_id IS NULL", (intent_name,))
+
+        result = cursor.fetchone()
+        return result["answer_text"] if result else None
+
+    except Error as e:
+        print(f"Lỗi truy vấn dynamic answer: {e}")
+        return None
+    finally:
+        if conn and conn.is_connected():
+            cursor.close()
+            conn.close()
+
 # Endpoint gửi tin nhắn đến Dialogflow
 @app.post("/dialogflow-proxy")
 async def dialogflow_proxy(req: DialogflowRequest):
@@ -78,6 +101,11 @@ async def dialogflow_proxy(req: DialogflowRequest):
         # Nếu là intent kết thúc thì đánh dấu kết thúc phiên
         if intent_name == "IKetThuc":
             mark_session_ended(session_id)
+
+        # Ưu tiên trả lời từ dynamic_answers nếu có
+        dynamic_response = get_dynamic_answer(intent_name)
+        if dynamic_response:
+            fulfillment_text = dynamic_response
 
         # Lưu vào database
         turn_order = get_next_turn_order(session_id)
