@@ -47,33 +47,41 @@ class DialogflowRequest(BaseModel):
 class EndSessionRequest(BaseModel):
     session_id: str
 
-# Endpoint kiểm tra
-@app.get("/")
-def root():
-    return {"message": "Chatbot API is running"}
-
-# Truy vấn dynamic_answers nếu có
-def get_dynamic_answer(intent_name: str, program_id: int = None):
-    conn = None
+# Truy vấn học phí
+def get_program_tuition_by_intent():
     try:
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
 
-        if program_id:
-            cursor.execute("SELECT answer_text FROM dynamic_answers WHERE intent_name = %s AND program_id = %s", (intent_name, program_id))
-        else:
-            cursor.execute("SELECT answer_text FROM dynamic_answers WHERE intent_name = %s AND program_id IS NULL", (intent_name,))
+        query = """
+            SELECT 
+                p.name AS program_name,
+                m.major_name,
+                p.duration,
+                t.fee_amount,
+                t.notes
+            FROM programs p
+            LEFT JOIN majors_info m ON p.major_id = m.id
+            LEFT JOIN tuition_fees t ON t.program_id = p.id
+        """
+        cursor.execute(query)
+        result = cursor.fetchall()
 
-        result = cursor.fetchone()
-        return result["answer_text"] if result else None
+        return result if result else None
 
     except Error as e:
-        print(f"Lỗi truy vấn dynamic answer: {e}")
+        print(f"Lỗi truy vấn học phí: {e}")
         return None
+
     finally:
         if conn and conn.is_connected():
             cursor.close()
             conn.close()
+
+# Endpoint kiểm tra
+@app.get("/")
+def root():
+    return {"message": "Chatbot API is running"}
 
 # Endpoint gửi tin nhắn đến Dialogflow
 @app.post("/dialogflow-proxy")
@@ -102,10 +110,13 @@ async def dialogflow_proxy(req: DialogflowRequest):
         if intent_name == "IKetThuc":
             mark_session_ended(session_id)
 
-        # Ưu tiên trả lời từ dynamic_answers nếu có
-        dynamic_response = get_dynamic_answer(intent_name)
-        if dynamic_response:
-            fulfillment_text = dynamic_response
+        # ===== PHẢN HỒI ĐỘNG CHO INTENT CỤ THỂ =====
+        if intent_name == "IHocPhi":
+            tuition_data = get_program_tuition_by_intent()
+            if tuition_data:
+                fulfillment_text = "Thông tin học phí của một số chương trình:\n"
+                for item in tuition_data:
+                    fulfillment_text += f"- {item['program_name']} ({item['major_name']}): {item['fee_amount']} / năm. {item['notes'] or ''}\n"
 
         # Lưu vào database
         turn_order = get_next_turn_order(session_id)
