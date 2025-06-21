@@ -1,10 +1,13 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, UploadFile, File, Form
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 import mysql.connector
 from mysql.connector import Error
 from google.cloud import dialogflow_v2 as dialogflow
 from google.oauth2 import service_account
+from PIL import Image
+import pytesseract
+import io
 import os
 import json
 
@@ -133,6 +136,23 @@ async def dialogflow_proxy(req: DialogflowRequest):
 
     except Exception as e:
         return {"response": f"Đã xảy ra lỗi khi xử lý câu hỏi: {str(e)}"}
+
+# Endpoint xử lý ảnh
+@app.post("/upload-image")
+async def upload_image(image: UploadFile = File(...), session_id: str = Form(...)):
+    try:
+        contents = await image.read()
+        img = Image.open(io.BytesIO(contents))
+
+        # Dùng OCR để trích xuất nội dung từ ảnh
+        text = pytesseract.image_to_string(img, lang='eng+vie')
+
+        response = f"Nội dung ảnh: {text.strip() or 'Không đọc được chữ.'}"
+
+        return {"response": response}
+
+    except Exception as e:
+        return {"response": f"Lỗi khi xử lý ảnh: {str(e)}"}
 
 # Lưu lượt chat
 def save_turn(session_id, turn_order, user_query, intent_name, parameters, bot_response):
