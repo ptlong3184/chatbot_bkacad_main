@@ -143,7 +143,7 @@ async def dialogflow_proxy(req: DialogflowRequest):
         return {"response": f"Đã xảy ra lỗi khi xử lý câu hỏi: {str(e)}"}
 
 
-@@app.post("/upload-image")
+@app.post("/upload-image")
 async def upload_image(image: UploadFile = File(...), session_id: str = Form(...)):
     try:
         # Đọc ảnh và encode base64
