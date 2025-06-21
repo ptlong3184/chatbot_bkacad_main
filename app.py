@@ -151,7 +151,7 @@ async def upload_image(image: UploadFile = File(...), session_id: str = Form(...
 
         client = openai.OpenAI(api_key=os.environ["OPENAI_API_KEY"])
         response = client.chat.completions.create(
-            model="gpt-4-vision-preview",
+            model="gpt-4o",
             messages=[
                 {
                     "role": "user",
