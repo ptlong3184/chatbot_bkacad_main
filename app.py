@@ -1,15 +1,13 @@
-from fastapi import FastAPI, HTTPException, UploadFile, File, Form
+from fastapi import FastAPI, HTTPException, File, UploadFile, Form
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 import mysql.connector
 from mysql.connector import Error
 from google.cloud import dialogflow_v2 as dialogflow
 from google.oauth2 import service_account
-from PIL import Image
-import pytesseract
-import io
 import os
 import json
+import requests
 
 # Lấy credentials từ biến môi trường JSON
 credentials_info = json.loads(os.environ["GOOGLE_APPLICATION_CREDENTIALS_JSON"])
@@ -20,6 +18,9 @@ session_client = dialogflow.SessionsClient(credentials=credentials)
 
 # ID của project trên Dialogflow
 PROJECT_ID = "chatbottuyensinh-gphg"
+
+# Lấy OpenAI API key
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 
 app = FastAPI()
 
@@ -81,12 +82,10 @@ def get_program_tuition_by_intent():
             cursor.close()
             conn.close()
 
-# Endpoint kiểm tra
 @app.get("/")
 def root():
     return {"message": "Chatbot API is running"}
 
-# Endpoint gửi tin nhắn đến Dialogflow
 @app.post("/dialogflow-proxy")
 async def dialogflow_proxy(req: DialogflowRequest):
     user_query = req.query
@@ -109,11 +108,9 @@ async def dialogflow_proxy(req: DialogflowRequest):
         fulfillment_text = result.fulfillment_text or "Xin lỗi, tôi chưa có thông tin phù hợp."
         intent_name = result.intent.display_name if result.intent else ""
 
-        # Nếu là intent kết thúc thì đánh dấu kết thúc phiên
         if intent_name == "IKetThuc":
             mark_session_ended(session_id)
 
-        # ===== PHẢN HỒI ĐỘNG CHO INTENT CỤ THỂ =====
         if intent_name == "IHocPhi":
             tuition_data = get_program_tuition_by_intent()
             if tuition_data:
@@ -121,7 +118,6 @@ async def dialogflow_proxy(req: DialogflowRequest):
                 for item in tuition_data:
                     fulfillment_text += f"- {item['program_name']} ({item['major_name']}): {item['fee_amount']} / năm. {item['notes'] or ''}\n"
 
-        # Lưu vào database
         turn_order = get_next_turn_order(session_id)
         save_turn(
             session_id,
@@ -137,24 +133,37 @@ async def dialogflow_proxy(req: DialogflowRequest):
     except Exception as e:
         return {"response": f"Đã xảy ra lỗi khi xử lý câu hỏi: {str(e)}"}
 
-# Endpoint xử lý ảnh
 @app.post("/upload-image")
 async def upload_image(image: UploadFile = File(...), session_id: str = Form(...)):
     try:
-        contents = await image.read()
-        img = Image.open(io.BytesIO(contents))
+        image_bytes = await image.read()
+        headers = {
+            "Authorization": f"Bearer {OPENAI_API_KEY}"
+        }
+        files = {
+            "file": (image.filename, image_bytes, image.content_type)
+        }
+        data = {
+            "model": "gpt-4-vision-preview",
+            "prompt": "Hãy mô tả ảnh này. Ảnh có liên quan gì đến tuyển sinh không?"
+        }
 
-        # Dùng OCR để trích xuất nội dung từ ảnh
-        text = pytesseract.image_to_string(img, lang='eng+vie')
+        response = requests.post(
+            "https://api.openai.com/v1/images/interpret",
+            headers=headers,
+            files=files,
+            data=data
+        )
 
-        response = f"Nội dung ảnh: {text.strip() or 'Không đọc được chữ.'}"
-
-        return {"response": response}
+        if response.status_code == 200:
+            result = response.json()
+            return {"response": result.get("description", "Không thể nhận diện hình ảnh.")}
+        else:
+            return {"response": f"Lỗi từ OpenAI: {response.text}"}
 
     except Exception as e:
-        return {"response": f"Lỗi khi xử lý ảnh: {str(e)}"}
+        return {"response": f"Lỗi xử lý ảnh: {str(e)}"}
 
-# Lưu lượt chat
 def save_turn(session_id, turn_order, user_query, intent_name, parameters, bot_response):
     conn = None
     try:
@@ -178,7 +187,6 @@ def save_turn(session_id, turn_order, user_query, intent_name, parameters, bot_r
             cursor.close()
             conn.close()
 
-# Lấy lượt chat tiếp theo
 def get_next_turn_order(session_id):
     conn = None
     try:
@@ -195,7 +203,6 @@ def get_next_turn_order(session_id):
             cursor.close()
             conn.close()
 
-# Đánh dấu phiên đã kết thúc
 def mark_session_ended(session_id):
     conn = None
     try:
