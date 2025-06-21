@@ -8,6 +8,10 @@ from google.oauth2 import service_account
 import os
 import json
 import requests
+from fastapi import UploadFile, File, Form, HTTPException
+import openai
+import base64
+import os
 
 # Lấy credentials từ biến môi trường JSON
 credentials_info = json.loads(os.environ["GOOGLE_APPLICATION_CREDENTIALS_JSON"])
@@ -33,6 +37,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 # Kết nối MySQL
 def get_connection():
     return mysql.connector.connect(
@@ -43,13 +48,16 @@ def get_connection():
         database=os.getenv("DB_NAME").strip()
     )
 
+
 # Model cho request
 class DialogflowRequest(BaseModel):
     query: str
     session_id: str
 
+
 class EndSessionRequest(BaseModel):
     session_id: str
+
 
 # Truy vấn học phí
 def get_program_tuition_by_intent():
@@ -58,16 +66,15 @@ def get_program_tuition_by_intent():
         cursor = conn.cursor(dictionary=True)
 
         query = """
-            SELECT 
-                p.name AS program_name,
-                m.major_name,
-                p.duration,
-                t.fee_amount,
-                t.notes
-            FROM programs p
-            LEFT JOIN majors_info m ON p.major_id = m.id
-            LEFT JOIN tuition_fees t ON t.program_id = p.id
-        """
+                SELECT p.name AS program_name,
+                       m.major_name,
+                       p.duration,
+                       t.fee_amount,
+                       t.notes
+                FROM programs p
+                         LEFT JOIN majors_info m ON p.major_id = m.id
+                         LEFT JOIN tuition_fees t ON t.program_id = p.id \
+                """
         cursor.execute(query)
         result = cursor.fetchall()
 
@@ -82,9 +89,11 @@ def get_program_tuition_by_intent():
             cursor.close()
             conn.close()
 
+
 @app.get("/")
 def root():
     return {"message": "Chatbot API is running"}
+
 
 @app.post("/dialogflow-proxy")
 async def dialogflow_proxy(req: DialogflowRequest):
@@ -133,36 +142,38 @@ async def dialogflow_proxy(req: DialogflowRequest):
     except Exception as e:
         return {"response": f"Đã xảy ra lỗi khi xử lý câu hỏi: {str(e)}"}
 
+
 @app.post("/upload-image")
 async def upload_image(image: UploadFile = File(...), session_id: str = Form(...)):
     try:
-        image_bytes = await image.read()
-        headers = {
-            "Authorization": f"Bearer {OPENAI_API_KEY}"
-        }
-        files = {
-            "file": (image.filename, image_bytes, image.content_type)
-        }
-        data = {
-            "model": "gpt-4-vision-preview",
-            "prompt": "Hãy mô tả ảnh này. Ảnh có liên quan gì đến tuyển sinh không?"
-        }
+        # Đặt API Key
+        openai.api_key = os.getenv("OPENAI_API_KEY")
 
-        response = requests.post(
-            "https://api.openai.com/v1/images/interpret",
-            headers=headers,
-            files=files,
-            data=data
+        # Đọc ảnh và encode base64
+        image_bytes = await image.read()
+        image_base64 = base64.b64encode(image_bytes).decode("utf-8")
+
+        # Gửi ảnh tới GPT-4 Vision
+        response = openai.ChatCompletion.create(
+            model="gpt-4-vision-preview",
+            messages=[
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "text", "text": "Hãy mô tả ảnh này. Ảnh có liên quan đến tuyển sinh không?"},
+                        {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{image_base64}"}}
+                    ]
+                }
+            ],
+            max_tokens=300,
         )
 
-        if response.status_code == 200:
-            result = response.json()
-            return {"response": result.get("description", "Không thể nhận diện hình ảnh.")}
-        else:
-            return {"response": f"Lỗi từ OpenAI: {response.text}"}
+        description = response["choices"][0]["message"]["content"]
+        return {"response": description}
 
     except Exception as e:
-        return {"response": f"Lỗi xử lý ảnh: {str(e)}"}
+        raise HTTPException(status_code=500, detail=f"Lỗi xử lý ảnh: {str(e)}")
+
 
 def save_turn(session_id, turn_order, user_query, intent_name, parameters, bot_response):
     conn = None
@@ -175,9 +186,10 @@ def save_turn(session_id, turn_order, user_query, intent_name, parameters, bot_r
             cursor.execute("INSERT INTO chatbot_sessions (session_id) VALUES (%s)", (session_id,))
 
         cursor.execute("""
-            INSERT INTO chatbot_turns (session_id, turn_order, user_query, intent_name, parameters, bot_response)
-            VALUES (%s, %s, %s, %s, %s, %s)
-        """, (session_id, turn_order, user_query, intent_name, str(parameters), bot_response))
+                       INSERT INTO chatbot_turns (session_id, turn_order, user_query, intent_name, parameters,
+                                                  bot_response)
+                       VALUES (%s, %s, %s, %s, %s, %s)
+                       """, (session_id, turn_order, user_query, intent_name, str(parameters), bot_response))
 
         conn.commit()
     except Error as e:
@@ -186,6 +198,7 @@ def save_turn(session_id, turn_order, user_query, intent_name, parameters, bot_r
         if conn and conn.is_connected():
             cursor.close()
             conn.close()
+
 
 def get_next_turn_order(session_id):
     conn = None
@@ -202,6 +215,7 @@ def get_next_turn_order(session_id):
         if conn and conn.is_connected():
             cursor.close()
             conn.close()
+
 
 def mark_session_ended(session_id):
     conn = None
