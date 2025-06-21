@@ -146,28 +146,30 @@ async def dialogflow_proxy(req: DialogflowRequest):
 @app.post("/upload-image")
 async def upload_image(image: UploadFile = File(...), session_id: str = Form(...)):
     try:
-        # Đọc ảnh và encode base64
         image_bytes = await image.read()
         base64_image = base64.b64encode(image_bytes).decode("utf-8")
 
-        # Gửi tới OpenAI GPT-4 Vision
-        openai.api_key = os.environ["OPENAI_API_KEY"]
-        response = openai.ChatCompletion.create(
+        client = openai.OpenAI(api_key=os.environ["OPENAI_API_KEY"])
+        response = client.chat.completions.create(
             model="gpt-4-vision-preview",
             messages=[
                 {
                     "role": "user",
                     "content": [
                         {"type": "text", "text": "Hãy mô tả ảnh này. Ảnh có liên quan gì đến tuyển sinh không?"},
-                        {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{base64_image}"}},
+                        {
+                            "type": "image_url",
+                            "image_url": {
+                                "url": f"data:image/jpeg;base64,{base64_image}"
+                            }
+                        }
                     ],
                 }
             ],
-            max_tokens=300,
+            max_tokens=500,
         )
 
-        answer = response.choices[0].message.content
-        return {"response": answer}
+        return {"response": response.choices[0].message.content}
 
     except Exception as e:
         return {"response": f"Lỗi xử lý ảnh: {str(e)}"}
