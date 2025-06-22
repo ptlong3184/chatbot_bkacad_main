@@ -59,6 +59,22 @@ class EndSessionRequest(BaseModel):
     session_id: str
 
 
+def get_scholarship_info():
+    try:
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT score_range, amount FROM scholarship_info ORDER BY id ASC")
+        result = cursor.fetchall()
+        return result if result else None
+    except Error as e:
+        print(f"Lỗi truy vấn học bổng: {e}")
+        return None
+    finally:
+        if conn and conn.is_connected():
+            cursor.close()
+            conn.close()
+
+
 # Truy vấn học phí
 def get_program_tuition_by_intent():
     try:
@@ -127,6 +143,27 @@ async def dialogflow_proxy(req: DialogflowRequest):
                 for item in tuition_data:
                     fulfillment_text += f"- {item['program_name']} ({item['major_name']}): {item['fee_amount']} / năm. {item['notes'] or ''}\n"
 
+        elif intent_name == "I_gia_tri_hoc_bong":
+            data = get_scholarship_info()
+            if data:
+                fulfillment_text = "📚 Giá trị học bổng theo điểm thi:\n"
+                for item in data:
+                    fulfillment_text += f"- {item['score_range']}: {item['amount']} VNĐ\n"
+        elif intent_name == "I_thoi_gian_thi_hoc_bong":
+            fulfillment_text = "⏰ Thời gian tổ chức kỳ thi học bổng thường diễn ra vào tháng 6 hàng năm. Thí sinh vui lòng theo dõi fanpage chính thức của BKACAD để cập nhật chi tiết."
+
+        elif intent_name == "I_thong_tin_chung_hoc_bong":
+            fulfillment_text = (
+                "🎓 BKACAD tổ chức kỳ thi Học bổng Sinh viên Tài năng hằng năm nhằm giúp các bạn học sinh lớp 12 "
+                "và đã tốt nghiệp THPT trên toàn quốc có cơ hội tiếp cận chương trình đào tạo hiện đại, chuẩn quốc tế."
+            )
+
+        elif intent_name == "I_tuyensinh_thoigian_hoc_bong":
+            fulfillment_text = (
+                "📆 Kỳ thi học bổng nằm trong đợt tuyển sinh chính của BKACAD, thường tổ chức vào tháng 6 hoặc 7. "
+                "Thông tin chi tiết sẽ được công bố sớm trên trang chính thức."
+            )
+
         turn_order = get_next_turn_order(session_id)
         save_turn(
             session_id,
@@ -141,7 +178,6 @@ async def dialogflow_proxy(req: DialogflowRequest):
 
     except Exception as e:
         return {"response": f"Đã xảy ra lỗi khi xử lý câu hỏi: {str(e)}"}
-
 
 
 def save_turn(session_id, turn_order, user_query, intent_name, parameters, bot_response):
