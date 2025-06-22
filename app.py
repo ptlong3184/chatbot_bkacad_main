@@ -75,35 +75,107 @@ def get_scholarship_info():
             conn.close()
 
 
-# Truy vấn học phí
-def get_program_tuition_by_intent():
+def get_major_info_by_keyword(keyword: str):
+    try:
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
+        query = """
+                SELECT major_name, description
+                FROM majors_info
+                WHERE major_name LIKE %s
+                   OR description LIKE %s \
+                """
+        like_kw = f"%{keyword}%"
+        cursor.execute(query, (like_kw, like_kw))
+        major = cursor.fetchone()
+
+        if major:
+            return f"Ngành {major['major_name']}:\n{major['description']}"
+        else:
+            return "Không tìm thấy thông tin ngành học phù hợp."
+
+    except Error as e:
+        print(f"Lỗi khi tìm ngành học: {e}")
+        return "Đã xảy ra lỗi khi tìm ngành học."
+    finally:
+        if conn and conn.is_connected():
+            cursor.close()
+            conn.close()
+
+
+def get_all_majors():
+    try:
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT major_name, description FROM majors_info")
+        majors = cursor.fetchall()
+        if not majors:
+            return "Hiện tại chưa có thông tin ngành học."
+
+        response = "Các ngành đào tạo tại BKACAD:\n"
+        for m in majors:
+            response += f"- {m['major_name']}: {m['description']}\n"
+        return response
+
+    except Error as e:
+        print(f"Lỗi truy vấn ngành học: {e}")
+        return "Đã xảy ra lỗi khi truy vấn ngành học."
+    finally:
+        if conn and conn.is_connected():
+            cursor.close()
+            conn.close()
+
+
+def get_vieclam_info_by_intent(intent_name: str):
     try:
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
 
-        query = """
-                SELECT p.name AS program_name,
-                       m.major_name,
-                       p.duration,
-                       t.fee_amount,
-                       t.notes
-                FROM programs p
-                         LEFT JOIN majors_info m ON p.major_id = m.id
-                         LEFT JOIN tuition_fees t ON t.program_id = p.id \
-                """
-        cursor.execute(query)
-        result = cursor.fetchall()
+        query = "SELECT content FROM vieclam_info WHERE category = %s"
+        cursor.execute(query, (intent_name,))
+        result = cursor.fetchone()
 
-        return result if result else None
+        return result["content"] if result else "Hiện chưa có thông tin việc làm cho yêu cầu này."
 
     except Error as e:
-        print(f"Lỗi truy vấn học phí: {e}")
-        return None
+        print(f"Lỗi truy vấn việc làm: {e}")
+        return "Đã xảy ra lỗi khi truy vấn thông tin việc làm."
 
     finally:
         if conn and conn.is_connected():
             cursor.close()
             conn.close()
+
+
+# Truy vấn học phí
+# def get_program_tuition_by_intent():
+#     try:
+#         conn = get_connection()
+#         cursor = conn.cursor(dictionary=True)
+#
+#         query = """
+#                 SELECT p.name AS program_name,
+#                        m.major_name,
+#                        p.duration,
+#                        t.fee_amount,
+#                        t.notes
+#                 FROM programs p
+#                          LEFT JOIN majors_info m ON p.major_id = m.id
+#                          LEFT JOIN tuition_fees t ON t.program_id = p.id \
+#                 """
+#         cursor.execute(query)
+#         result = cursor.fetchall()
+#
+#         return result if result else None
+#
+#     except Error as e:
+#         print(f"Lỗi truy vấn học phí: {e}")
+#         return None
+#
+#     finally:
+#         if conn and conn.is_connected():
+#             cursor.close()
+#             conn.close()
 
 
 @app.get("/")
@@ -136,12 +208,12 @@ async def dialogflow_proxy(req: DialogflowRequest):
         if intent_name == "IKetThuc":
             mark_session_ended(session_id)
 
-        if intent_name == "IHocPhi":
-            tuition_data = get_program_tuition_by_intent()
-            if tuition_data:
-                fulfillment_text = "Thông tin học phí của một số chương trình:\n"
-                for item in tuition_data:
-                    fulfillment_text += f"- {item['program_name']} ({item['major_name']}): {item['fee_amount']} / năm. {item['notes'] or ''}\n"
+        # if intent_name == "IHocPhi":
+        #     tuition_data = get_program_tuition_by_intent()
+        #     if tuition_data:
+        #         fulfillment_text = "Thông tin học phí của một số chương trình:\n"
+        #         for item in tuition_data:
+        #             fulfillment_text += f"- {item['program_name']} ({item['major_name']}): {item['fee_amount']} / năm. {item['notes'] or ''}\n"
 
         elif intent_name == "I_gia_tri_hoc_bong":
             data = get_scholarship_info()
@@ -163,6 +235,15 @@ async def dialogflow_proxy(req: DialogflowRequest):
                 "📆 Kỳ thi học bổng nằm trong đợt tuyển sinh chính của BKACAD, thường tổ chức vào tháng 6 hoặc 7. "
                 "Thông tin chi tiết sẽ được công bố sớm trên trang chính thức."
             )
+
+            if intent_name == "I_danhsach_nganhhoc":
+                fulfillment_text = get_all_majors()
+
+            elif intent_name == "I_nganhhoc_laptrinh":
+                fulfillment_text = get_major_info_by_keyword("lập trình")
+
+            if intent_name.startswith("I_vieclam_"):
+                fulfillment_text = get_vieclam_info_by_intent(intent_name.replace("I_", "").lower())
 
         turn_order = get_next_turn_order(session_id)
         save_turn(
