@@ -242,7 +242,7 @@ async def dialogflow_proxy(req: DialogflowRequest):
             elif intent_name == "I_nganhhoc_laptrinh":
                 fulfillment_text = get_major_info_by_keyword("lập trình")
 
-            if intent_name.startswith("I_vieclam_"):
+            if intent_name.startswith("I_vieclam_ho_tro"):
                 fulfillment_text = get_vieclam_info_by_intent(intent_name.replace("I_", "").lower())
 
         turn_order = get_next_turn_order(session_id)
