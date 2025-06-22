@@ -143,37 +143,6 @@ async def dialogflow_proxy(req: DialogflowRequest):
         return {"response": f"Đã xảy ra lỗi khi xử lý câu hỏi: {str(e)}"}
 
 
-@app.post("/upload-image")
-async def upload_image(image: UploadFile = File(...), session_id: str = Form(...)):
-    try:
-        image_bytes = await image.read()
-        base64_image = base64.b64encode(image_bytes).decode("utf-8")
-
-        client = openai.OpenAI(api_key=os.environ["OPENAI_API_KEY"])
-        response = client.chat.completions.create(
-            model="gpt-4o",
-            messages=[
-                {
-                    "role": "user",
-                    "content": [
-                        {"type": "text", "text": "Hãy mô tả ảnh này. Ảnh có liên quan gì đến tuyển sinh không?"},
-                        {
-                            "type": "image_url",
-                            "image_url": {
-                                "url": f"data:image/jpeg;base64,{base64_image}"
-                            }
-                        }
-                    ],
-                }
-            ],
-            max_tokens=500,
-        )
-
-        return {"response": response.choices[0].message.content}
-
-    except Exception as e:
-        return {"response": f"Lỗi xử lý ảnh: {str(e)}"}
-
 
 def save_turn(session_id, turn_order, user_query, intent_name, parameters, bot_response):
     conn = None
