@@ -242,11 +242,9 @@ async def dialogflow_proxy(req: DialogflowRequest):
                 "Ngành Lập trình",
                 "Ngành Thiết kế đồ họa",
                 "Ngành Quản trị mạng",
-                "Ngành Marketing số"
+                "Ngành Marketing"
             ]
 
-        elif intent_name == "I_nganhhoc_laptrinh":
-            fulfillment_text = get_major_info_by_keyword("lập trình")
 
         if intent_name.startswith("I_vieclam_ho_tro"):
             fulfillment_text = get_vieclam_info_by_intent(intent_name.replace("I_", "").lower())
