@@ -277,8 +277,9 @@ async def dialogflow_proxy(req: DialogflowRequest):
 
         return {
             "response": fulfillment_text,
-            "suggestions": suggestions if 'suggestions' in locals() else []
+            "suggestions": suggestions
         }
+
 
 
     except Exception as e:
