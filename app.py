@@ -248,8 +248,8 @@ async def dialogflow_proxy(req: DialogflowRequest):
                 "Ra trường làm gì?",
                 "Ngành này có phù hợp với nữ không?",
                 "Nên chọn lập trình hay quản trị mạng?",
-                "Nếu học không giỏi thì nên chọn ngành nào?",
-                "Nếu học tốt thì nên chọn ngành nào?",
+                "Nếu không giỏi toán thì nên chọn ngành nào?",
+                "Nếu học tốt toán thì nên chọn ngành nào?",
                 "So sánh lập trình và quản trị mạng",
                 "So sánh lập trình và thiết kế đồ họa"
             ]
@@ -262,16 +262,15 @@ async def dialogflow_proxy(req: DialogflowRequest):
 
         elif intent_name == "I_thietkedohoa_lagi":
             suggestions = [
-                "Ngành thiết kế đồ họa là gì?",
                 "Ngành thiết kế đồ họa có khó không?",
                 "Cần kỹ năng gì để học thiết kế?",
                 "Ngành này có phù hợp với tôi không?",
                 "Ra trường làm nghề gì?",
-                "Dùng phần mềm nào trong ngành này?",
+                "Dùng công cụ nào trong ngành này?",
                 "So sánh thiết kế và lập trình",
                 "So sánh thiết kế và marketing",
-                "Tôi học tốt thì nên chọn ngành nào?",
-                "Tôi học chưa tốt thì nên chọn gì?"
+                "Tôi vẽ tốt thì nên chọn ngành này không?",
+                "Tôi vẽ chưa tốt thì nên chọn ngành này không?"
             ]
             return {
                 "response": fulfillment_text,
@@ -280,7 +279,6 @@ async def dialogflow_proxy(req: DialogflowRequest):
 
         elif intent_name == "I_quantrimang_lagi":
             suggestions = [
-                "Ngành quản trị mạng là gì?",
                 "Học ngành này có khó không?",
                 "Cần kỹ năng gì để học quản trị mạng?",
                 "Ngành này có phù hợp với tôi không?",
@@ -288,8 +286,8 @@ async def dialogflow_proxy(req: DialogflowRequest):
                 "Dùng công cụ nào trong ngành này?",
                 "So sánh lập trình và quản trị mạng",
                 "Nên học lập trình hay quản trị mạng?",
-                "Tôi học chưa tốt nên học ngành nào?",
-                "Tôi học tốt thì chọn ngành nào?"
+                "Tôi không giỏi toán nên học ngành này không?",
+                "Tôi học giỏi toán thì chọn ngành này không?"
             ]
             return {
                 "response": fulfillment_text,
@@ -297,7 +295,6 @@ async def dialogflow_proxy(req: DialogflowRequest):
             }
         elif intent_name == "I_marketing_la_gi":
             suggestions = [
-                "Ngành Marketing là gì?",
                 "Học ngành này có khó không?",
                 "Cần kỹ năng gì để học Marketing?",
                 "Tôi có phù hợp với ngành này không?",
@@ -305,8 +302,8 @@ async def dialogflow_proxy(req: DialogflowRequest):
                 "Dùng công cụ gì trong ngành Marketing?",
                 "So sánh Marketing và thiết kế đồ họa",
                 "Tôi nên chọn thiết kế hay marketing?",
-                "Nếu học chưa tốt nên học ngành nào?",
-                "Nếu học tốt thì nên chọn ngành nào?"
+                "Nếu tôi không giỏi giao tiếp nên học ngành này không?",
+                "Nếu tôi giao tiếp tốt thì nên chọn ngành này không?"
             ]
             return {
                 "response": fulfillment_text,
