@@ -236,14 +236,20 @@ async def dialogflow_proxy(req: DialogflowRequest):
                 "Thông tin chi tiết sẽ được công bố sớm trên trang chính thức."
             )
 
-            if intent_name == "I_danhsach_nganhhoc":
-                fulfillment_text = get_all_majors()
+        elif intent_name == "I_danhsach_nganhhoc":
+            fulfillment_text = get_all_majors()
+            suggestions = [
+                "Ngành Lập trình",
+                "Ngành Thiết kế đồ họa",
+                "Ngành Quản trị mạng",
+                "Ngành Marketing số"
+            ]
 
-            elif intent_name == "I_nganhhoc_laptrinh":
-                fulfillment_text = get_major_info_by_keyword("lập trình")
+        elif intent_name == "I_nganhhoc_laptrinh":
+            fulfillment_text = get_major_info_by_keyword("lập trình")
 
-            if intent_name.startswith("I_vieclam_ho_tro"):
-                fulfillment_text = get_vieclam_info_by_intent(intent_name.replace("I_", "").lower())
+        if intent_name.startswith("I_vieclam_ho_tro"):
+            fulfillment_text = get_vieclam_info_by_intent(intent_name.replace("I_", "").lower())
 
         turn_order = get_next_turn_order(session_id)
         save_turn(
@@ -255,7 +261,11 @@ async def dialogflow_proxy(req: DialogflowRequest):
             fulfillment_text
         )
 
-        return {"response": fulfillment_text}
+        return {
+            "response": fulfillment_text,
+            "suggestions": suggestions if 'suggestions' in locals() else []
+        }
+
 
     except Exception as e:
         return {"response": f"Đã xảy ra lỗi khi xử lý câu hỏi: {str(e)}"}

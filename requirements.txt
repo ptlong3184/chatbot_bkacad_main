@@ -5,3 +5,4 @@ mysql-connector-python
 google-cloud-dialogflow
 openai
 python-multipart
+sentence-transformers==2.2.2
