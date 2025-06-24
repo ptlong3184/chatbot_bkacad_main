@@ -210,27 +210,85 @@ async def dialogflow_proxy(req: DialogflowRequest):
         if intent_name == "IKetThuc":
             mark_session_ended(session_id)
 
-        elif intent_name == "I_gia_tri_hoc_bong":
+
+        elif intent_name == "I_gia_tri_hocbong":
+
             data = get_scholarship_info()
+
             if data:
+
                 fulfillment_text = "📚 Giá trị học bổng theo điểm thi:\n"
+
                 for item in data:
                     fulfillment_text += f"- {item['score_range']}: {item['amount']} VNĐ\n"
 
-        elif intent_name == "I_thoi_gian_thi_hoc_bong":
-            fulfillment_text = "⏰ Thời gian tổ chức kỳ thi học bổng thường diễn ra vào tháng 6 hàng năm. Thí sinh vui lòng theo dõi fanpage chính thức của BKACAD để cập nhật chi tiết."
+            suggestions = [
 
-        elif intent_name == "I_thong_tin_chung_hoc_bong":
-            fulfillment_text = (
-                "🎓 BKACAD tổ chức kỳ thi Học bổng Sinh viên Tài năng hằng năm nhằm giúp các bạn học sinh lớp 12 "
-                "và đã tốt nghiệp THPT trên toàn quốc có cơ hội tiếp cận chương trình đào tạo hiện đại, chuẩn quốc tế."
-            )
+                "Làm sao để đăng ký học bổng?",
 
-        elif intent_name == "I_tuyensinh_thoigian_hoc_bong":
-            fulfillment_text = (
-                "📆 Kỳ thi học bổng nằm trong đợt tuyển sinh chính của BKACAD, thường tổ chức vào tháng 6 hoặc 7. "
-                "Thông tin chi tiết sẽ được công bố sớm trên trang chính thức."
-            )
+                "Hồ sơ học bổng cần những gì?",
+
+                "Có cần học sinh giỏi không?",
+
+                "Học sinh nghèo có được học bổng không?",
+
+                "Có cần hoạt động ngoại khóa không?",
+
+                "Giải thưởng đạt được có giúp xin học bổng không?",
+
+                "Đăng ký học bổng ở đâu?",
+
+                "Thời gian đăng ký học bổng là khi nào?",
+
+                "Có kỳ thi học bổng riêng không?"
+
+            ]
+
+            return {
+
+                "response": fulfillment_text,
+
+                "suggestions": suggestions
+
+            }
+
+        elif intent_name == "I_loai_hocbong":
+            suggestions = [
+                "Điều kiện xét học bổng là gì?",
+                "Cần những giấy tờ gì để đăng ký học bổng?",
+                "Làm sao để đăng ký học bổng?",
+                "Hoàn cảnh gia đình có ảnh hưởng đến học bổng không?",
+                "Có cần tham gia hoạt động ngoại khóa không?",
+                "Học lực bao nhiêu thì đủ điều kiện học bổng?",
+                "Giải thưởng nào được chấp nhận khi xét học bổng?",
+                "Nộp hồ sơ học bổng ở đâu?",
+                "Hạn đăng ký học bổng là khi nào?"
+            ]
+
+            return {
+                "response": fulfillment_text,
+                "suggestions": suggestions
+            }
+
+        elif intent_name == "I_tuyensinh_hocphi_theo_hocbong":
+            suggestions = [
+                "Học bổng có làm giảm học phí không?",
+                "Cần điều kiện gì để được học bổng?",
+                "Nếu học lực yếu thì có được học bổng không?",
+                "Sau khi có học bổng thì học phí còn bao nhiêu?",
+                "Học bổng có áp dụng cho năm sau không?",
+                "Học bổng có bao gồm ký túc xá không?",
+                "Có thể kết hợp nhiều loại học bổng không?",
+                "Nộp học bổng ở đâu?",
+                "Khi nào có kết quả học bổng?"
+            ]
+
+            return {
+                "response": fulfillment_text,
+                "suggestions": suggestions
+            }
+
+
 
         elif intent_name == "I_danhsach_nganhhoc":
             fulfillment_text = get_all_majors()
