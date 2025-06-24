@@ -317,6 +317,26 @@ async def dialogflow_proxy(req: DialogflowRequest):
                 "response": fulfillment_text,
                 "suggestions": suggestions
             }
+        elif intent_name in [
+            "I_bkacad_gioithieu",
+            "I_bkacad_bachkhoa",
+            "I_bkacad_doitac",
+            "I_bkacad_pbt",
+            "I_bkacad_finish_course"
+        ]:
+            suggestions = [
+                "BKACAD có được công nhận bằng cấp không?",
+                "Học BKACAD có được hoãn nghĩa vụ quân sự không?",
+                "Học xong BKACAD có thể liên thông không?",
+                "Giáo trình ở BKACAD có hiện đại không?",
+                "BKACAD có điểm gì nổi bật?",
+                "Lịch sử hình thành của BKACAD thế nào?"
+            ]
+            return {
+                "response": fulfillment_text,
+                "suggestions": suggestions
+            }
+
 
         elif intent_name == "I_thietkedohoa_lagi":
             suggestions = [
