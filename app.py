@@ -245,6 +245,20 @@ async def dialogflow_proxy(req: DialogflowRequest):
                 "Ngành Marketing"
             ]
 
+        elif intent_name == "I_nganhhoc_laptrinh":
+            fulfillment_text = get_major_info_by_keyword("lập trình")
+            suggestions = [
+                "Ngành lập trình là gì?",
+                "Học lập trình có khó không?",
+                "Học lập trình cần kỹ năng gì?",
+                "Ra trường làm gì?",
+                "Ngành này có phù hợp với nữ không?",
+                "Nên chọn lập trình hay quản trị mạng?",
+                "Nếu học không giỏi thì nên chọn ngành nào?",
+                "Nếu học tốt thì nên chọn ngành nào?",
+                "So sánh lập trình và quản trị mạng",
+                "So sánh lập trình và thiết kế đồ họa"
+            ]
 
         if intent_name.startswith("I_vieclam_ho_tro"):
             fulfillment_text = get_vieclam_info_by_intent(intent_name.replace("I_", "").lower())
