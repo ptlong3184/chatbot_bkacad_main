@@ -242,7 +242,6 @@ async def dialogflow_proxy(req: DialogflowRequest):
             ]
 
         elif intent_name == "I_laptrinh_lagi":
-            fulfillment_text = get_major_info_by_keyword("lập trình")
             suggestions = [
                 "Ngành lập trình là gì?",
                 "Học lập trình có khó không?",
