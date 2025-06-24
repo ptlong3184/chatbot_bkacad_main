@@ -191,6 +191,8 @@ async def dialogflow_proxy(req: DialogflowRequest):
     if not user_query:
         raise HTTPException(status_code=400, detail="Missing query")
 
+    suggestions = []
+
     try:
         session = session_client.session_path(PROJECT_ID, session_id)
 
