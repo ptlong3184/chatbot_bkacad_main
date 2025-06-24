@@ -191,8 +191,6 @@ async def dialogflow_proxy(req: DialogflowRequest):
     if not user_query:
         raise HTTPException(status_code=400, detail="Missing query")
 
-    suggestions = []
-
     try:
         session = session_client.session_path(PROJECT_ID, session_id)
 
@@ -207,15 +205,10 @@ async def dialogflow_proxy(req: DialogflowRequest):
         fulfillment_text = result.fulfillment_text or "Xin lỗi, tôi chưa có thông tin phù hợp."
         intent_name = result.intent.display_name if result.intent else ""
 
+        suggestions = []
+
         if intent_name == "IKetThuc":
             mark_session_ended(session_id)
-
-        # if intent_name == "IHocPhi":
-        #     tuition_data = get_program_tuition_by_intent()
-        #     if tuition_data:
-        #         fulfillment_text = "Thông tin học phí của một số chương trình:\n"
-        #         for item in tuition_data:
-        #             fulfillment_text += f"- {item['program_name']} ({item['major_name']}): {item['fee_amount']} / năm. {item['notes'] or ''}\n"
 
         elif intent_name == "I_gia_tri_hoc_bong":
             data = get_scholarship_info()
@@ -223,6 +216,7 @@ async def dialogflow_proxy(req: DialogflowRequest):
                 fulfillment_text = "📚 Giá trị học bổng theo điểm thi:\n"
                 for item in data:
                     fulfillment_text += f"- {item['score_range']}: {item['amount']} VNĐ\n"
+
         elif intent_name == "I_thoi_gian_thi_hoc_bong":
             fulfillment_text = "⏰ Thời gian tổ chức kỳ thi học bổng thường diễn ra vào tháng 6 hàng năm. Thí sinh vui lòng theo dõi fanpage chính thức của BKACAD để cập nhật chi tiết."
 
@@ -262,6 +256,16 @@ async def dialogflow_proxy(req: DialogflowRequest):
                 "So sánh lập trình và thiết kế đồ họa"
             ]
 
+            # ✅ Return ngay tại đây nếu đã có response và suggestions
+            return {
+                "response": fulfillment_text,
+                "suggestions": suggestions
+            }
+
+        elif intent_name.startswith("I_vieclam_ho_tro"):
+            fulfillment_text = get_vieclam_info_by_intent(intent_name.replace("I_", "").lower())
+
+        # Lưu lượt chat
         turn_order = get_next_turn_order(session_id)
         save_turn(
             session_id,
@@ -276,8 +280,6 @@ async def dialogflow_proxy(req: DialogflowRequest):
             "response": fulfillment_text,
             "suggestions": suggestions
         }
-
-
 
     except Exception as e:
         return {"response": f"Đã xảy ra lỗi khi xử lý câu hỏi: {str(e)}"}
