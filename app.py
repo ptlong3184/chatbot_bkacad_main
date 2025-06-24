@@ -243,7 +243,6 @@ async def dialogflow_proxy(req: DialogflowRequest):
 
         elif intent_name == "I_laptrinh_lagi":
             suggestions = [
-                "Ngành lập trình là gì?",
                 "Học lập trình có khó không?",
                 "Học lập trình cần kỹ năng gì?",
                 "Ra trường làm gì?",
@@ -260,6 +259,63 @@ async def dialogflow_proxy(req: DialogflowRequest):
                 "response": fulfillment_text,
                 "suggestions": suggestions
             }
+
+        elif intent_name == "I_thietkedohoa_lagi":
+            suggestions = [
+                "Ngành thiết kế đồ họa là gì?",
+                "Ngành thiết kế đồ họa có khó không?",
+                "Cần kỹ năng gì để học thiết kế?",
+                "Ngành này có phù hợp với tôi không?",
+                "Ra trường làm nghề gì?",
+                "Dùng phần mềm nào trong ngành này?",
+                "So sánh thiết kế và lập trình",
+                "So sánh thiết kế và marketing",
+                "Tôi học tốt thì nên chọn ngành nào?",
+                "Tôi học chưa tốt thì nên chọn gì?"
+            ]
+            return {
+                "response": fulfillment_text,
+                "suggestions": suggestions
+            }
+
+        elif intent_name == "I_quantrimang_lagi":
+            suggestions = [
+                "Ngành quản trị mạng là gì?",
+                "Học ngành này có khó không?",
+                "Cần kỹ năng gì để học quản trị mạng?",
+                "Ngành này có phù hợp với tôi không?",
+                "Ra trường làm việc gì?",
+                "Dùng công cụ nào trong ngành này?",
+                "So sánh lập trình và quản trị mạng",
+                "Nên học lập trình hay quản trị mạng?",
+                "Tôi học chưa tốt nên học ngành nào?",
+                "Tôi học tốt thì chọn ngành nào?"
+            ]
+            return {
+                "response": fulfillment_text,
+                "suggestions": suggestions
+            }
+        elif intent_name == "I_marketing_la_gi":
+            suggestions = [
+                "Ngành Marketing là gì?",
+                "Học ngành này có khó không?",
+                "Cần kỹ năng gì để học Marketing?",
+                "Tôi có phù hợp với ngành này không?",
+                "Ra trường làm nghề gì?",
+                "Dùng công cụ gì trong ngành Marketing?",
+                "So sánh Marketing và thiết kế đồ họa",
+                "Tôi nên chọn thiết kế hay marketing?",
+                "Nếu học chưa tốt nên học ngành nào?",
+                "Nếu học tốt thì nên chọn ngành nào?"
+            ]
+            return {
+                "response": fulfillment_text,
+                "suggestions": suggestions
+            }
+
+
+
+
 
         elif intent_name.startswith("I_vieclam_ho_tro"):
             fulfillment_text = get_vieclam_info_by_intent(intent_name.replace("I_", "").lower())
