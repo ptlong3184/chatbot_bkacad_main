@@ -262,6 +262,11 @@ async def dialogflow_proxy(req: DialogflowRequest):
                 "So sánh lập trình và thiết kế đồ họa"
             ]
 
+        return {
+            "response": fulfillment_text,
+            "suggestions": suggestions
+        }
+
         if intent_name.startswith("I_vieclam_ho_tro"):
             fulfillment_text = get_vieclam_info_by_intent(intent_name.replace("I_", "").lower())
 
