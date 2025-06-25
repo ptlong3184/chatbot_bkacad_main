@@ -394,7 +394,7 @@ async def dialogflow_proxy(req: DialogflowRequest):
                 "response": fulfillment_text,
                 "suggestions": suggestions
             }
-        elif intent_name == "I_marketing_la_gi":
+        elif intent_name == "I_marketing_lagi":
             suggestions = [
                 "Học ngành này có khó không?",
                 "Cần kỹ năng gì để học Marketing?",
