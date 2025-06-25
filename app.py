@@ -385,7 +385,6 @@ async def dialogflow_proxy(req: DialogflowRequest):
                 "Ra trường làm việc gì?",
                 "Dùng công cụ nào trong ngành này?",
                 "So sánh lập trình và quản trị mạng",
-                "Nên học lập trình hay quản trị mạng?",
                 "Tôi không giỏi toán nên học ngành này không?",
                 "Tôi học giỏi toán thì chọn ngành này không?"
             ]
