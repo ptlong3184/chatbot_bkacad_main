@@ -410,6 +410,85 @@ async def dialogflow_proxy(req: DialogflowRequest):
                 "response": fulfillment_text,
                 "suggestions": suggestions
             }
+        elif intent_name == "I_tuvan_chon_nganh":
+            suggestions = [
+                "Tôi không biết chọn ngành nào phù hợp",
+                "Có ngành nào dễ xin việc không?",
+                "Tôi muốn chọn ngành theo sở thích",
+                "Có công cụ nào giúp tôi xác định ngành học không?",
+                "Tôi chưa rõ khả năng của mình phù hợp ngành nào",
+            ]
+
+            return {
+                "response": fulfillment_text,
+                "suggestions": suggestions
+            }
+
+        elif intent_name == "I_tuvan_hoc_nghe_thay_vi_dai_hoc":
+            suggestions = [
+                "Tôi đang phân vân giữa học đại học và học nghề",
+                "Học nghề có cơ hội việc làm không?",
+                "Tôi muốn biết mô hình vừa học vừa làm",
+                "Tôi gặp khó khăn tài chính, có nên học nghề không?",
+            ]
+
+            return {
+                "response": fulfillment_text,
+                "suggestions": suggestions
+            }
+
+        elif intent_name == "I_tuvan_nganh_de_xin_viec":
+            suggestions = [
+                "Ngành nào dễ tìm việc sau khi tốt nghiệp?",
+                "Học ngành nào có cơ hội làm việc cao?",
+                "Có ngành nào có nhu cầu tuyển dụng nhiều không?",
+                "Tôi cần học kỹ năng gì để dễ xin việc?",
+            ]
+
+            return {
+                "response": fulfillment_text,
+                "suggestions": suggestions
+            }
+
+        elif intent_name == "I_tuvan_theo_so_thich":
+            suggestions = [
+                "Tôi thích giải bài thì học ngành gì?",
+                "Tôi thích giao tiếp thì học ngành gì?",
+                "Tôi thích sáng tạo thì học ngành gì?",
+                "Tôi thích quản lý thì nên học ngành nào?",
+            ]
+
+            return {
+                "response": fulfillment_text,
+                "suggestions": suggestions
+            }
+
+        elif intent_name == "I_tuvan_theo_dinh_huong_nghe":
+            suggestions = [
+                "Tôi muốn chọn ngành đúng với nghề tương lai",
+                "Tôi chưa rõ ngành nào phù hợp với nghề tôi muốn làm",
+                "Ngành nào phù hợp với yêu cầu nghề nghiệp hiện nay?",
+                "Tôi cần kỹ năng gì để theo đuổi nghề mơ ước?",
+            ]
+
+            return {
+                "response": fulfillment_text,
+                "suggestions": suggestions
+            }
+
+        elif intent_name == "I_tuvan_vua_hoc_vua_lam":
+            suggestions = [
+                "Có mô hình nào vừa học vừa làm không?",
+                "Tôi muốn đi làm sớm trong khi học",
+                "Học nghề có được thực tập sớm không?",
+                "Có ngành nào phù hợp với mô hình vừa học vừa làm?",
+            ]
+
+            return {
+                "response": fulfillment_text,
+                "suggestions": suggestions
+            }
+
 
 
 
