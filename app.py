@@ -382,7 +382,7 @@ async def dialogflow_proxy(req: DialogflowRequest):
             suggestions = [
                 "Học ngành này có khó không?",
                 "Cần kỹ năng gì để học quản trị mạng?",
-                "Ngành này có phù hợp với tôi không?",
+                "Ngành quản trị mạng này có phù hợp với tôi không?",
                 "Ra trường làm việc gì?",
                 "Dùng công cụ nào trong ngành này?",
                 "So sánh lập trình và quản trị mạng",
