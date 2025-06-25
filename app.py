@@ -296,13 +296,13 @@ async def dialogflow_proxy(req: DialogflowRequest):
             "I_tuyensinh_tuyen_thang"
         ]:
             suggestions = [
-                "Nếu thiếu hồ sơ thì sao?",
                 "Có ai hỗ trợ đăng ký không?",
                 "Học bổng có làm giảm học phí không?",
                 "Làm sao biết đã nộp thành công?",
                 "Khi nào bắt đầu tuyển sinh?",
                 "Trường có mấy đợt tuyển sinh?",
                 "Hạn cuối nộp hồ sơ là khi nào?",
+                "Nếu thiếu hồ sơ thì sao?",
                 "Khi nào bắt đầu nhập học?",
                 "Thời gian tuyển sinh có thay đổi không?"
             ]
@@ -310,8 +310,6 @@ async def dialogflow_proxy(req: DialogflowRequest):
                 "response": fulfillment_text,
                 "suggestions": suggestions
             }
-
-
 
 
         elif intent_name == "I_danhsach_nganhhoc":
@@ -424,6 +422,23 @@ async def dialogflow_proxy(req: DialogflowRequest):
                 "suggestions": suggestions
             }
 
+        elif intent_name == "I_tuvan_so_thich_all":
+            suggestions = [
+                "Tôi chưa rõ sở thích của mình",
+                "Tôi thích giao tiếp, nói chuyện",
+                "Tôi thích làm việc nhóm",
+                "Tôi thích sử dụng máy tính",
+                "Tôi thích tổ chức, quản lý công việc",
+                "Tôi có óc sáng tạo, thích làm mới",
+                "Tôi thích làm việc độc lập"
+            ]
+
+            return {
+                "response": fulfillment_text,
+                "suggestions": suggestions
+            }
+
+
         elif intent_name == "I_tuvan_hoc_nghe_thay_vi_dai_hoc":
             suggestions = [
                 "Tôi đang phân vân giữa học đại học và học nghề",
@@ -488,10 +503,6 @@ async def dialogflow_proxy(req: DialogflowRequest):
                 "response": fulfillment_text,
                 "suggestions": suggestions
             }
-
-
-
-
 
 
         elif intent_name.startswith("I_vieclam_ho_tro"):
