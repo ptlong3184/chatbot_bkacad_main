@@ -288,6 +288,7 @@ async def dialogflow_proxy(req: DialogflowRequest):
                 "suggestions": suggestions
             }
         elif intent_name in [
+            "I_tuyensinh_thong_tin_chung",
             "I_tuyensinh_cach_nop_ho_so",
             "I_tuyensinh_dieu_kien_dang_ky",
             "I_tuyensinh_hinh_thuc_xet_tuyen",
@@ -402,7 +403,6 @@ async def dialogflow_proxy(req: DialogflowRequest):
                 "Ra trường làm nghề gì?",
                 "Dùng công cụ gì trong ngành Marketing?",
                 "So sánh Marketing và thiết kế đồ họa",
-                "Tôi nên chọn thiết kế hay marketing?",
                 "Nếu tôi không giỏi giao tiếp nên học ngành này không?",
                 "Nếu tôi giao tiếp tốt thì nên chọn ngành này không?"
             ]
