@@ -328,18 +328,18 @@ async def dialogflow_proxy(req: DialogflowRequest):
                 "Học lập trình cần kỹ năng gì?",
                 "Ra trường làm gì?",
                 "Ngành này có phù hợp với nữ không?",
-                "Nên chọn lập trình hay quản trị mạng?",
-                "Nếu không giỏi toán thì nên chọn ngành nào?",
-                "Nếu học tốt toán thì nên chọn ngành nào?",
+                "Nếu không giỏi toán thì nên chọn ngành này không?",
+                "Nếu học tốt toán thì nên chọn ngành này không?",
                 "So sánh lập trình và quản trị mạng",
-                "So sánh lập trình và thiết kế đồ họa"
+                "So sánh lập trình và thiết kế đồ họa",
+                "So sánh lập trình với marketing"
             ]
 
-            # ✅ Return ngay tại đây nếu đã có response và suggestions
             return {
                 "response": fulfillment_text,
                 "suggestions": suggestions
             }
+
         elif intent_name in [
             "I_bkacad_gioithieu",
             "I_bkacad_bachkhoa",
