@@ -217,7 +217,9 @@ async def dialogflow_proxy(req: DialogflowRequest):
 
             if data:
 
-                fulfillment_text = "📚 Giá trị học bổng theo điểm thi:\n"
+                fulfillment_text = (
+                    "🎓 BKACAD tổ chức kỳ thi Học bổng Sinh viên tài năng hằng năm để tìm kiếm và ươm mầm các tài năng CNTT trên toàn quốc. Đây là cơ hội để các bạn tiếp cận mô hình đào tạo hiện đại chuẩn Quốc tế và định hướng khởi nghiệp.<br>"
+                    "📌 Dành cho học sinh lớp 12 hoặc đã tốt nghiệp THPT.📊 Giá trị học bổng được cấp theo kết quả bài thi, cụ thể như sau:\n")
 
                 for item in data:
                     fulfillment_text += f"- {item['score_range']}: {item['amount']} VNĐ\n"
