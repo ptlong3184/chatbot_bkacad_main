@@ -333,7 +333,8 @@ async def dialogflow_proxy(req: DialogflowRequest):
                 "Nếu học tốt toán thì nên chọn ngành này không?",
                 "So sánh lập trình và quản trị mạng",
                 "So sánh lập trình và thiết kế đồ họa",
-                "So sánh lập trình với marketing"
+                "So sánh lập trình với marketing",
+                "Ngành này học những môn gì?"
             ]
 
             return {
@@ -372,7 +373,8 @@ async def dialogflow_proxy(req: DialogflowRequest):
                 "So sánh thiết kế và lập trình",
                 "So sánh thiết kế và marketing",
                 "Tôi vẽ tốt thì nên chọn ngành này không?",
-                "Tôi vẽ chưa tốt thì nên chọn ngành này không?"
+                "Tôi vẽ chưa tốt thì nên chọn ngành này không?",
+                "Ngành thiết kế này học những môn gì?"
             ]
             return {
                 "response": fulfillment_text,
@@ -388,7 +390,8 @@ async def dialogflow_proxy(req: DialogflowRequest):
                 "Dùng công cụ nào trong ngành này?",
                 "So sánh lập trình và quản trị mạng",
                 "Tôi không giỏi toán nên học ngành này không?",
-                "Tôi học giỏi toán thì chọn ngành này không?"
+                "Tôi học giỏi toán thì chọn ngành này không?",
+                "Ngành quản trị mạng học những môn gì?"
             ]
             return {
                 "response": fulfillment_text,
@@ -403,7 +406,8 @@ async def dialogflow_proxy(req: DialogflowRequest):
                 "Dùng công cụ gì trong ngành Marketing?",
                 "So sánh Marketing và thiết kế đồ họa",
                 "Nếu tôi không giỏi giao tiếp nên học ngành này không?",
-                "Nếu tôi giao tiếp tốt thì nên chọn ngành này không?"
+                "Nếu tôi giao tiếp tốt thì nên chọn ngành này không?",
+                "Học marketing có những môn học gì?"
             ]
             return {
                 "response": fulfillment_text,
