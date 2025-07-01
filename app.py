@@ -369,7 +369,6 @@ async def dialogflow_proxy(req: DialogflowRequest):
                 "Cần kỹ năng gì để học thiết kế?",
                 "Ngành này có phù hợp với tôi không?",
                 "Ra trường làm nghề gì?",
-                "Dùng công cụ nào trong ngành này?",
                 "So sánh thiết kế và lập trình",
                 "So sánh thiết kế và marketing",
                 "Tôi vẽ tốt thì nên chọn ngành này không?",
@@ -387,7 +386,6 @@ async def dialogflow_proxy(req: DialogflowRequest):
                 "Cần kỹ năng gì để học quản trị mạng?",
                 "Ngành quản trị mạng này có phù hợp với tôi không?",
                 "Ra trường làm việc gì?",
-                "Dùng công cụ nào trong ngành này?",
                 "So sánh lập trình và quản trị mạng",
                 "Tôi không giỏi toán nên học ngành này không?",
                 "Tôi học giỏi toán thì chọn ngành này không?",
@@ -403,7 +401,6 @@ async def dialogflow_proxy(req: DialogflowRequest):
                 "Cần kỹ năng gì để học Marketing?",
                 "Tôi có phù hợp với ngành này không?",
                 "Ra trường làm nghề gì?",
-                "Dùng công cụ gì trong ngành Marketing?",
                 "So sánh Marketing và thiết kế đồ họa",
                 "Nếu tôi không giỏi giao tiếp nên học ngành này không?",
                 "Nếu tôi giao tiếp tốt thì nên chọn ngành này không?",
@@ -418,8 +415,7 @@ async def dialogflow_proxy(req: DialogflowRequest):
                 "Tôi không biết chọn ngành nào phù hợp",
                 "Có ngành nào dễ xin việc không?",
                 "Tôi muốn chọn ngành theo sở thích",
-                "Có công cụ nào giúp tôi xác định ngành học không?",
-                "Tôi chưa rõ khả năng của mình phù hợp ngành nào",
+                "Tôi chưa rõ khả năng của mình phù hợp ngành nào"
             ]
 
             return {
