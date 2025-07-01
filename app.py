@@ -261,7 +261,7 @@ async def dialogflow_proxy(req: DialogflowRequest):
                 "So sánh lập trình và quản trị mạng",
                 "So sánh lập trình và thiết kế đồ họa",
                 "So sánh lập trình với marketing",
-                "Ngành này học những môn gì?"
+                "Ngành lập trình học những môn gì?"
             ]
 
             return {
@@ -282,7 +282,9 @@ async def dialogflow_proxy(req: DialogflowRequest):
                 "Học xong BKACAD có thể liên thông không?",
                 "Giáo trình ở BKACAD có hiện đại không?",
                 "BKACAD có điểm gì nổi bật?",
-                "Lịch sử hình thành của BKACAD thế nào?"
+                "Lịch sử hình thành của BKACAD thế nào?",
+                "Trường có cơ sở vật chất tốt không?",
+                "Đội ngũ giảng viên tại BKACAD như thế nào?"
             ]
             return {
                 "response": fulfillment_text,
