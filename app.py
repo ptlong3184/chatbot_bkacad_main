@@ -256,45 +256,6 @@ async def dialogflow_proxy(req: DialogflowRequest):
 
             }
 
-        elif intent_name == "I_loai_hocbong":
-            suggestions = [
-                "Điều kiện xét học bổng là gì?",
-                "Cần những giấy tờ gì để đăng ký học bổng?",
-                "Làm sao để đăng ký học bổng?",
-                "Giải thưởng nào được chấp nhận khi xét học bổng?",
-                "Hạn đăng ký học bổng là khi nào?"
-            ]
-
-            return {
-                "response": fulfillment_text,
-                "suggestions": suggestions
-            }
-
-
-        elif intent_name in [
-            "I_tuyensinh_thong_tin_chung",
-            "I_tuyensinh_cach_nop_ho_so",
-            "I_tuyensinh_dieu_kien_dang_ky",
-            "I_tuyensinh_hinh_thuc_xet_tuyen",
-            "I_tuyensinh_ho_so_can_chuan_bi",
-            "I_tuyensinh_tuyen_thang"
-        ]:
-            suggestions = [
-                "Có ai hỗ trợ đăng ký không?",
-                "Học bổng có làm giảm học phí không?",
-                "Làm sao biết đã nộp thành công?",
-                "Khi nào bắt đầu tuyển sinh?",
-                "Trường có mấy đợt tuyển sinh?",
-                "Hạn cuối nộp hồ sơ là khi nào?",
-                "Nếu thiếu hồ sơ thì sao?",
-                "Khi nào bắt đầu nhập học?",
-                "Thời gian tuyển sinh có thay đổi không?"
-            ]
-            return {
-                "response": fulfillment_text,
-                "suggestions": suggestions
-            }
-
 
         elif intent_name == "I_danhsach_nganhhoc":
             fulfillment_text = get_all_majors()
