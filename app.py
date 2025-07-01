@@ -242,9 +242,9 @@ async def dialogflow_proxy(req: DialogflowRequest):
 
                 "Thời gian đăng ký học bổng là khi nào?",
 
-                "Có kỳ thi học bổng riêng không?",
+                "Có kỳ thi học bổng riêng không?"
 
-                "Học bổng có giảm học phí không?"
+
 
             ]
 
@@ -262,7 +262,6 @@ async def dialogflow_proxy(req: DialogflowRequest):
                 "Cần những giấy tờ gì để đăng ký học bổng?",
                 "Làm sao để đăng ký học bổng?",
                 "Giải thưởng nào được chấp nhận khi xét học bổng?",
-                "Nộp hồ sơ học bổng ở đâu?",
                 "Hạn đăng ký học bổng là khi nào?"
             ]
 
