@@ -261,9 +261,6 @@ async def dialogflow_proxy(req: DialogflowRequest):
                 "Điều kiện xét học bổng là gì?",
                 "Cần những giấy tờ gì để đăng ký học bổng?",
                 "Làm sao để đăng ký học bổng?",
-                "Hoàn cảnh gia đình có ảnh hưởng đến học bổng không?",
-                "Có cần tham gia hoạt động ngoại khóa không?",
-                "Học lực bao nhiêu thì đủ điều kiện học bổng?",
                 "Giải thưởng nào được chấp nhận khi xét học bổng?",
                 "Nộp hồ sơ học bổng ở đâu?",
                 "Hạn đăng ký học bổng là khi nào?"
