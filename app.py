@@ -225,6 +225,10 @@ async def dialogflow_proxy(req: DialogflowRequest):
                     fulfillment_text += f"- {item['score_range']}: {item['amount']} VNĐ\n"
 
             suggestions = [
+                "Học bổng BKACAD đăng ký ở đâu?",
+                "Điều kiện để thi học bổng là gì?",
+                "BKACAD có những loại học bổng nào?",
+                "Thời gian thi học bổng là bao giờ ?"
 
             ]
 
