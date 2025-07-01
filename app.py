@@ -226,26 +226,6 @@ async def dialogflow_proxy(req: DialogflowRequest):
 
             suggestions = [
 
-                "Làm sao để đăng ký học bổng?",
-
-                "Hồ sơ học bổng cần những gì?",
-
-                "Có cần học sinh giỏi không?",
-
-                "Học sinh nghèo có được học bổng không?",
-
-                "Có cần hoạt động ngoại khóa không?",
-
-                "Giải thưởng đạt được có giúp xin học bổng không?",
-
-                "Đăng ký học bổng ở đâu?",
-
-                "Thời gian đăng ký học bổng là khi nào?",
-
-                "Có kỳ thi học bổng riêng không?"
-
-
-
             ]
 
             return {
