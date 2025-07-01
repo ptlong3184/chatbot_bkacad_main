@@ -242,7 +242,9 @@ async def dialogflow_proxy(req: DialogflowRequest):
 
                 "Thời gian đăng ký học bổng là khi nào?",
 
-                "Có kỳ thi học bổng riêng không?"
+                "Có kỳ thi học bổng riêng không?",
+
+                "Học bổng có giảm học phí không?"
 
             ]
 
@@ -272,19 +274,7 @@ async def dialogflow_proxy(req: DialogflowRequest):
                 "suggestions": suggestions
             }
 
-        elif intent_name == "I_tuyensinh_hocphi_theo_hocbong":
-            suggestions = [
-                "Cần điều kiện gì để được học bổng?",
-                "Sau khi có học bổng thì học phí còn bao nhiêu?",
-                "Học bổng có bao gồm ký túc xá không?",
-                "Có thể kết hợp nhiều loại học bổng không?",
-                "Nộp học bổng ở đâu?"
-            ]
 
-            return {
-                "response": fulfillment_text,
-                "suggestions": suggestions
-            }
         elif intent_name in [
             "I_tuyensinh_thong_tin_chung",
             "I_tuyensinh_cach_nop_ho_so",
