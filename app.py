@@ -274,15 +274,11 @@ async def dialogflow_proxy(req: DialogflowRequest):
 
         elif intent_name == "I_tuyensinh_hocphi_theo_hocbong":
             suggestions = [
-                "Học bổng có làm giảm học phí không?",
                 "Cần điều kiện gì để được học bổng?",
-                "Nếu học lực yếu thì có được học bổng không?",
                 "Sau khi có học bổng thì học phí còn bao nhiêu?",
-                "Học bổng có áp dụng cho năm sau không?",
                 "Học bổng có bao gồm ký túc xá không?",
                 "Có thể kết hợp nhiều loại học bổng không?",
-                "Nộp học bổng ở đâu?",
-                "Khi nào có kết quả học bổng?"
+                "Nộp học bổng ở đâu?"
             ]
 
             return {
