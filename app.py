@@ -343,10 +343,8 @@ async def dialogflow_proxy(req: DialogflowRequest):
             }
         elif intent_name == "I_tuvan_chon_nganh":
             suggestions = [
-                "Tôi không biết chọn ngành nào phù hợp",
                 "Có ngành nào dễ xin việc không?",
-                "Tôi muốn chọn ngành theo sở thích",
-                "Tôi chưa rõ khả năng của mình phù hợp ngành nào"
+                "Tôi muốn chọn ngành theo sở thích"
             ]
 
             return {
