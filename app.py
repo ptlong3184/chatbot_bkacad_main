@@ -352,6 +352,23 @@ async def dialogflow_proxy(req: DialogflowRequest):
                 "suggestions": suggestions
             }
 
+        elif intent_name == "I_tuyensinh_thong_tin_chung":
+            suggestions = [
+                "Cách nộp hồ sơ xét tuyển?",
+                "Cần chuẩn bị những giấy tờ gì?",
+                "Thiếu giấy tờ thì xử lý sao?",
+                "Tôi cần hỗ trợ tư vấn đăng ký",
+                "Làm sao biết mình đã nộp thành công?",
+                "Thời gian bắt đầu tuyển sinh là khi nào?",
+                "Có mấy đợt tuyển sinh?",
+                "Thời hạn cuối nộp hồ sơ là khi?",
+                "Khi nào nhập học?"
+            ]
+            return {
+                "response": fulfillment_text,
+                "suggestions": suggestions
+            }
+
         elif intent_name == "I_tuvan_so_thich_all":
             suggestions = [
                 "Tôi chưa rõ sở thích của mình",
