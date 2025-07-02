@@ -114,9 +114,10 @@ def get_all_majors():
 
         response = "Các ngành đào tạo tại BKACAD:\n"
         for m in majors:
-            response += (f"- {m['major_name']}: {m['description']}\n")
-        response = "Bạn muốn biết thêm thông tin về ngành nào không?\n"
+            response += f"- {m['major_name']}: {m['description']}\n"
+        response += "\nBạn muốn biết thêm về ngành nào không?"
         return response
+
 
     except Error as e:
         print(f"Lỗi truy vấn ngành học: {e}")
