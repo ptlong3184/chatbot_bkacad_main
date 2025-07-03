@@ -358,10 +358,9 @@ async def dialogflow_proxy(req: DialogflowRequest):
                 "Cần chuẩn bị những giấy tờ gì?",
                 "Thiếu giấy tờ thì xử lý sao?",
                 "Tôi cần hỗ trợ tư vấn đăng ký",
-                "Làm sao biết mình đã nộp thành công?",
                 "Thời gian bắt đầu tuyển sinh là khi nào?",
                 "Có mấy đợt tuyển sinh?",
-                "Thời hạn cuối nộp hồ sơ là khi?",
+                "Thời hạn cuối nộp hồ sơ là khi nào?",
                 "Khi nào nhập học?"
             ]
             return {
