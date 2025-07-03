@@ -286,7 +286,8 @@ async def dialogflow_proxy(req: DialogflowRequest):
                 "BKACAD có điểm gì nổi bật?",
                 "Lịch sử hình thành của BKACAD thế nào?",
                 "Trường có cơ sở vật chất tốt không?",
-                "Đội ngũ giảng viên tại BKACAD như thế nào?"
+                "Đội ngũ giảng viên tại BKACAD như thế nào?",
+                "TÔi có thể hỏi về tuyển sinh không?"
             ]
             return {
                 "response": fulfillment_text,
