@@ -150,34 +150,34 @@ def get_vieclam_info_by_intent(intent_name: str):
 
 
 # Truy vấn học phí
-# def get_program_tuition_by_intent():
-#     try:
-#         conn = get_connection()
-#         cursor = conn.cursor(dictionary=True)
-#
-#         query = """
-#                 SELECT p.name AS program_name,
-#                        m.major_name,
-#                        p.duration,
-#                        t.fee_amount,
-#                        t.notes
-#                 FROM programs p
-#                          LEFT JOIN majors_info m ON p.major_id = m.id
-#                          LEFT JOIN tuition_fees t ON t.program_id = p.id \
-#                 """
-#         cursor.execute(query)
-#         result = cursor.fetchall()
-#
-#         return result if result else None
-#
-#     except Error as e:
-#         print(f"Lỗi truy vấn học phí: {e}")
-#         return None
-#
-#     finally:
-#         if conn and conn.is_connected():
-#             cursor.close()
-#             conn.close()
+def get_program_tuition_by_intent():
+    try:
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
+
+        query = """
+                SELECT p.name AS program_name,
+                       m.major_name,
+                       p.duration,
+                       t.fee_amount,
+                       t.notes
+                FROM programs p
+                         LEFT JOIN majors_info m ON p.major_id = m.id
+                         LEFT JOIN tuition_fees t ON t.program_id = p.id \
+                """
+        cursor.execute(query)
+        result = cursor.fetchall()
+
+        return result if result else None
+
+    except Error as e:
+        print(f"Lỗi truy vấn học phí: {e}")
+        return None
+
+    finally:
+        if conn and conn.is_connected():
+            cursor.close()
+            conn.close()
 
 
 @app.get("/")
